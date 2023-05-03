@@ -1,0 +1,20 @@
+{
+  "name": "inventory-manager",
+  "version": "1.0.0",
+  "description": "Simple inventory manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install_modules": "cd ./api && npm install && cd ../react && npm install && cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeBorgneAntoine/inventory-manager.git"
+  },
+  "author": "LeBorgneAntoine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeBorgneAntoine/inventory-manager/issues"
+  },
+  "homepage": "https://github.com/LeBorgneAntoine/inventory-manager#readme"
+}
