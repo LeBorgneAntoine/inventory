@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install_modules": "cd ./api && npm install && cd ../react && npm install && cd .."
+    "install_modules": "cd ./api && npm install && cd ../react && npm install && cd ..",
+    "react": "cd ./react && npm run secure",
+    "react-build" : "cd ./react && npm run build",
+    "api": "cd ./api && npm run dev",
+    "predeploy": "npm run react-build",
+    "deploy": "gh-pages -d ./react/build"
   },
   "repository": {
     "type": "git",
@@ -16,5 +21,16 @@
   "bugs": {
     "url": "https://github.com/LeBorgneAntoine/inventory-manager/issues"
   },
-  "homepage": "https://github.com/LeBorgneAntoine/inventory-manager#readme"
+  "homepage": "https://github.com/LeBorgneAntoine/inventory-manager#readme",
+  "dependencies": {
+    "html5-qrcode": "^2.3.8",
+    "react-qr-code": "^2.0.11",
+    "react-qr-reader": "^3.0.0-beta-1",
+    "react-qr-scanner": "^1.0.0-alpha.11",
+    "react-zxing": "^1.1.4",
+    "socket.io-client": "^4.6.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  }
 }

@@ -13,6 +13,14 @@ class DatabaseHelper{
         this._db = new sqlite3.Database(databasePath);
     }
 
+    /**
+     * 
+     * @returns {import('sqlite3').Database}
+     */
+    query(){
+        return this._db
+    }
+
     setup(){
         return new DatabaseSetup(this._db)
     }

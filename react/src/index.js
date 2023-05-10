@@ -7,10 +7,13 @@ import router from './router';
 import NavBar from './components/NavBar';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
+
 root.render(
   <React.StrictMode>
-    <NavBar title={'Gestion'} />
-    <RouterProvider   router={router} />
+    <NavBar router={router} title={'Gestion'} />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

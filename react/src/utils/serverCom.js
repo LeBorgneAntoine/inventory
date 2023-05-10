@@ -1,5 +1,7 @@
-function connect(serverAddress){
+import { io } from "socket.io-client"
 
+function connect(serverAddress, name){
+    io(serverAddress, {  })
 }
 
 function emit(flag, message){

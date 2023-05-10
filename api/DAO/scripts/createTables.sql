@@ -1,16 +1,16 @@
-CREATE TABLE IF NOT EXISTS Refrence (
+CREATE TABLE IF NOT EXISTS Reference (
 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ref TEXT NOT NULL,
     name TEXT NOT NULL,
-    comments TEXT,
-    picture_name TEXT,
+    comment TEXT,
+    image TEXT,
     quantity NUMBER DEFAULT 0,
-    folder NUMBER
+    folder TEXT
 
 );
 CREATE TABLE IF NOT EXISTS Folder (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    parent NUMBER
+    parent TEXT
 );

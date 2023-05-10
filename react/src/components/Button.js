@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Lottie from 'lottie-react';
 import loadingAnimation from '../assets/lotties/loading.json'
 import {AnimatePresence, motion, useAnimate} from 'framer-motion'
 import useMeasure from "react-use-measure";
 
-export default function Button({children, Icon, color, process, onClick, transparent}){
+export default function Button({children, Icon, color, process, onClick, width, transparent, className}){
 
     const [isLoading, setLoading] = useState(false);
     const [scope, animate] = useAnimate()
     const [ref, bounds] = useMeasure()
+    const canBeClick = useRef(true)
+
 
     const [buttonData, setButtonData] = useState({
         Icon: Icon,
@@ -18,7 +20,7 @@ export default function Button({children, Icon, color, process, onClick, transpa
 
     function buttonSize(){
 
-        return buttonData.text.length * 13
+        return width ? width : buttonData.text.length * 13
 
     }
 
@@ -33,6 +35,8 @@ export default function Button({children, Icon, color, process, onClick, transpa
         }else{
             animate(scope.current, {
                 width: 60,
+            }, {
+                type: 'spring'
             })
         }
 
@@ -40,9 +44,11 @@ export default function Button({children, Icon, color, process, onClick, transpa
     
     function hasClicked(){
 
-        if(!isLoading){
+        if(!isLoading && canBeClick.current){
 
             if(process){
+
+                canBeClick.current = false
 
                 setLoading(true)
 
@@ -51,6 +57,10 @@ export default function Button({children, Icon, color, process, onClick, transpa
                     animate('div', {
                         opacity: [0, 1],
                         y: [60, 0]
+                    })
+
+                    if(newData.color)animate(scope.current, {
+                        backgroundColor: newData.color,
                     })
 
                     let saved = {
@@ -66,14 +76,22 @@ export default function Button({children, Icon, color, process, onClick, transpa
                     })
 
                     async function resetData() {
+
+                        if(newData.color)animate(scope.current, {
+                            backgroundColor: null,
+                        })
+
                         await animate('div', {
                             opacity: 0
                         })
+
                         setButtonData(saved)
+
                         await animate('div', {
                             opacity: 1,
                             y: [-10, 0]
                         })
+                        canBeClick.current = true;
                     }
 
                     setTimeout(() => {
@@ -92,8 +110,8 @@ export default function Button({children, Icon, color, process, onClick, transpa
 
     }
 
-    return <div className="flex items-center justify-center">
-                <div key={buttonData} ref={scope} onClick={hasClicked} style={{width: buttonSize()}} className='overflow-hidden h-[50px] rounded-md duration-100 hover:opacity-80 bg-blue-500 flex items-center justify-center gap-4 text-white cursor-pointer select-none'>
+    return <div className={className}>
+                <motion.div whileTap={{scale: .9}} key={buttonData} ref={scope} onTap={hasClicked} style={{width: buttonSize()}} className='overflow-hidden h-[50px] outline-none rounded-md duration-100 md:hover:opacity-80 bg-blue-500 flex items-center justify-center gap-4 text-white cursor-pointer select-none'>
 
                 <AnimatePresence onExitComplete>
                 { isLoading ?
@@ -112,6 +130,6 @@ export default function Button({children, Icon, color, process, onClick, transpa
 
                 </AnimatePresence>
         
-        </div>
+        </motion.div>
     </div>
 }

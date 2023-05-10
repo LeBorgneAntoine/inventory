@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FolderSheet from "../components/FolderSheet";
 import PageConainer from "./PageContainer";
 import Button from "../components/Button";
 import Icon from '@heroicons/react/24/solid'
-import { AnimatePresence, motion, useAnimate } from 'framer-motion';
+import { AnimatePresence, motion, stagger, useAnimate, useScroll } from 'framer-motion';
 import useSize from "../hooks/useSize";
+import Axios from 'axios';
+import useFolder from "../hooks/useFolder";
+import BottomSheet from "../components/BottomSheet";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useZxing } from "react-zxing";
+import Input from "../components/Input";
+import NumberScroll from "../components/NumberScroll";
 
-export default function Management({}){
+export default function Management(){
 
     const [selection, setSelection] = useState(['test']);
     const [references, setRefenerences] = useState({
@@ -15,16 +22,39 @@ export default function Management({}){
     })
     const [searchValue, setSearchValue] = useState('');
     const windowSize = useSize()
+    let {go, back, current, stack} = useFolder()
+    const [selectedItem, setSelectedItem] = useState(null)
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false)
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [quantity, setQuantity] = useState(0);
+    const { scrollYProgress } = useScroll();
+
+    useEffect(() => {
+        console.log(scrollYProgress)
+    }, [scrollYProgress])
+
+    useEffect(() => {
+        setSelectedItem(location.state ? references.references.find((val) => val.id === location.state.item) : null);
+    }, [location])
+
+    useEffect(() => {
+        setBottomSheetVisible(!!selectedItem)
+    }, [selectedItem])
 
     useState(() => {
 
-        fakeAPICall((data) => {
-
-            setRefenerences(data)
-
-        })
+        request()
 
     }, [])
+
+    async function request(){
+
+        let data = (await Axios.get('http://192.168.50.41:5000/inventory')).data
+
+        setRefenerences(data)
+
+    }
 
     function fakeAPICall(callback, delay){
 
@@ -43,6 +73,10 @@ export default function Management({}){
         }
        
     }
+
+    useEffect(() => {
+        console.log(current, stack)
+    }, [current])
 
     function sendModifications(finished){
 
@@ -65,105 +99,139 @@ export default function Management({}){
             {
                 windowSize.width < 1300 ? 
                 
-                <div className="absolute w-full h-full bg-zinc-700 flex-col overflow-auto container-snap">
+                <div className="absolute w-full h-full bg-white flex-col overflow-auto container-snap">
 
                     <div className=""></div>
                     
-                    <div className="bg-white rounded-md m-3 p-2 ">
-                            <Input placeholder={'Rechercher...'} />
-                        </div>
-                    <div className="flex overflow-x-auto space-x-2 rounded-md mx-3" >
-                        <div className="h-[40px] px-3 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <Icon.ChevronLeftIcon className="w-4 h-4" />
-                        </div>
-                        <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>
-                        <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>  <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>  <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>  <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>  <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>  <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>  <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>  <div className="h-[40px] px-7 bg-white rounded-md justify-center items-center flex text-neutral-700 border-[1px] select-none">
-                            <h5>Casques</h5>
-                        </div>
-                    </div>
-                    <div className="h-full m-3 flex-col flex gap-3">
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
-                        <div className="h-[70px] px-3 bg-white rounded-md flex items-center  text-neutral-700 border-[1px] select-none">
-                            <div>
-                                <h5 className="text-[18px] font-bold">Casques</h5>
-                                <h5 className="text-[15px] text-neutral-400">Réference: 1AZED34</h5>
-                            </div>
-                            <Icon.ChevronRightIcon className="absolute right-5 w-5 h-5 text-neutral-600" />
-                        </div>
+                    <div className="bg-neutral-100 rounded-md m-3 p-2 ">
+                            <Input Icon={Icon.MagnifyingGlassIcon} placeholder={'Rechercher...'} />
                     </div>
 
-                </div> : 
+                    
+                    <div className="pl-5 flex gap-2 opacity-75">
+                        <Icon.InboxStackIcon className="w-[20px] h-[20px]" />
+                        <h1 >Categorie(s)</h1>
+                    </div>
+
+                    <div className="flex overflow-x-auto items-center space-x-2 rounded-md mx-3 mt-2 mb-5" >
+                    
+                        <div onClick={() => back()} className="h-[40px] px-4 justify-center bg-neutral-100 rounded-md flex items-center  text-neutral-700 select-none">
+                        <Icon.ChevronLeftIcon className=" w-5 h-5 text-neutral-600" />
+                        </div>
+
+                        {references.folders.filter((val) => val.parent === current).map((folder) => <motion.div whileTap={{scale: .9}} animate={{opacity: 1}}  initial={{opacity: 0}} onClick={() => {
+                            go(folder.name)
+                        }} className="h-[40px] px-3 bg-neutral-100 rounded-md flex items-center  text-neutral-600  select-none">
+                                <h5 className="text-[18px] truncate max-w-[20rem]">{String(folder.name).toLowerCase()}</h5>
+                        </motion.div>)}
+
+                        {references.folders.filter((val) => val.parent === current).length <= 0 ? 
+                            <div className="absolute left-[50%] translate-x-[-50%] opacity-25">
+                                <h3>Aucune catégorie(s)</h3>
+                            </div> : null
+                        }
+                      
+
+                    </div>
+                    {current && <div className="opacity-60 flex items-center gap-2 pl-5 h-[20px] select-none">
+                            <Icon.FolderIcon className="w-[20px] h-[20px]" />
+                            <div className="inline-flex overflow-x-auto items-center h-[20px] gap-2 w-full">
+                                <AnimatePresence>
+                                    {
+                                        stack.map((val) => <>
+                                        <motion.h1  onClick={() =>go(val)} >{String(val).toLowerCase()}</motion.h1>
+                                        <Icon.ChevronRightIcon className="w-[15px] h-[15px]" />
+                                        </>)
+                                    }
+                                </AnimatePresence>
+                                <motion.h1 className="text-blue-500" key={stack} animate={{x: 0, opacity: 1}} initial={{x: -50, opacity: 0}} >{String(current).toLowerCase()}</motion.h1>
+
+                            </div>
+                           
+
+                             
+                    </div>}
+                    
+
+                    <div className="m-3 flex-col flex gap-3">
+                    
+            
+                    {references.references.filter((val) => val.folder === current).map((reference, i) => <motion.div whileTap={{scale: .85, opacity: .6}} animate={{height: 80}} initial={{height: 0}} onClick={() => {
+                        navigate('/', {
+                            state : {
+                                item: reference.id
+                            }
+                        })
+                       
+                    }} className="h-[80px] px-3 bg-neutral-100 relative rounded-md flex flex-col justify-center text-neutral-700  select-none">
+                            <h5 className="text-[18px] truncate max-w-[20rem] font-bold ">{reference.name}</h5>
+                            <h5 className="text-[15px] text-neutral-400">Réference: {reference.ref}</h5>
+                            <Icon.ChevronRightIcon className="absolute w-[20px] h-[20px] right-1 opacity-50" />
+                        </motion.div>)}
+
+                        {references.references.filter((val) => val.folder === current).length <= 0 ? <div className="absolute top-[45%] left-[50%] translate-x-[-50%] opacity-20 select-none">
+                            <Icon.RectangleGroupIcon className="w-[100px] h-[100px]" />
+                            <h1 className="">Aucune réference</h1>
+                        </div> : null}
+
+                    </div>
+
+                    <BottomSheet isShow={bottomSheetVisible} >
+
+                        {
+                            selectedItem && <>
+                                <div className="flex flex-col items-center">
+                                    <div className="flex w-full justify-between p-3">
+                                        <div className="flex flex-col p-2">
+                                            <h1 className="font-bold truncate max-w-[220px]">{selectedItem.name}</h1>
+                                            <h3 className="opacity-50">Réf: {selectedItem.ref}</h3>
+                                        </div>
+                                        <div>
+                                            <img className="top-2 right-2  rounded-md drop-shadow-md" src={selectedItem.image} />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col w-full justify-center items-center h-[200px]">
+                                        <div className="bg-neutral-100 rounded-md m-3 w-[200px] px-2">
+                                            <h1 className="text-[30px] font-bold">{quantity}</h1>
+                                        </div>
+                                        <div className="flex gap-3 justify-around w-full px-3">
+
+                                            <div className="bg-neutral-200 flex-1 h-[50px] flex justify-center items-center rounded-md select-none text-[16px]">-100</div>            
+                                            <div className="bg-neutral-200 flex-1 h-[50px] flex justify-center items-center rounded-md select-none text-[16px]">-10</div>            
+                                            <div className="bg-neutral-200 flex-1 h-[50px] flex justify-center items-center rounded-md select-none text-[16px]">-1</div>            
+                                            <div className="bg-neutral-200 flex-1 h-[50px] flex justify-center items-center rounded-md select-none text-[16px]">+1</div>            
+                                            <div className="bg-neutral-200 flex-1 h-[50px] flex justify-center items-center rounded-md select-none text-[16px]">+10</div>    
+                                            <div className="bg-neutral-200 flex-1 h-[50px] flex justify-center items-center rounded-md select-none text-[16px]">+100</div>            
+
+                                        </div>
+                                    </div>
+                                 
+                                    
+
+                                  
+                                </div>
+                               
+                                <div className="absolute flex bottom-8 w-full items-center gap-5 justify-end pr-3">
+                                    <Button width={130} Icon={Icon.PaperAirplaneIcon} >Envoyer</Button>
+                                    <Button Icon={Icon.ArrowUpCircleIcon} >Enregistrer</Button>
+                                </div>
+                                
+
+                            </>
+                        }
+                       
+                    </BottomSheet  >
+                   
+                   <AnimatePresence>
+                    {!selectedItem && <motion.div initial={{opacity: 0, y: 100}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: 100}} whileTap={{scale: .9, opacity: .5}} className="fixed bottom-5 flex justify-center items-center right-5 w-[70px] h-[70px] bg-blue-500 rounded-lg drop-shadow-xl" >
+                            <Icon.QrCodeIcon className="w-[50px] h-[50px] text-white" />
+                        </motion.div>}
+                   </AnimatePresence>
+                  
+
+                </div> 
+                
+                : 
 
                 <div className="absolute w-full h-full bg-zinc-700 flex">
 
@@ -181,13 +249,14 @@ export default function Management({}){
                         </div>
                     <div className="bg-white w-full mr-3 mt-3 mb-3 rounded-md drop-shadow-lg grid grid-cols-2 grid-rows-2 p-2 gap-3">
 
-                        <Panel />
-                        <Panel />
-                        <Panel />
-                        <Panel />
+                        <Panel files={references.references} folders={references.folders} />
+                        <Panel files={references.references} folders={references.folders} />
+                        <Panel files={references.references} folders={references.folders} />
+                        <Panel files={references.references} folders={references.folders} />
 
                     </div>
                 </div>
+
             }
 
           
@@ -195,7 +264,7 @@ export default function Management({}){
 }
 
 
-function Panel({item}){
+function Panel({item, files, folders}){
 
     const [currentItem, setCurrentItem] = useState(null);
     const [isDragOn, setDragOn] = useState(false);
@@ -216,9 +285,26 @@ function Panel({item}){
     function drop(ev) {
         setDragOn(false)
         ev.preventDefault();
-        const data = JSON.parse(ev.dataTransfer.getData("object"));
-        setCurrentItem(data)
+        try{
+            const data = JSON.parse(ev.dataTransfer.getData("object"));
+
+            if(data.id && files){
+                setCurrentItem(files.find((file) => file.id === data.id))
+            }else{
+                console.log(files)
+            }
+        }catch(err){
+
+        }
+      
+
+       
     }
+
+    useEffect(() => {
+        console.log(currentItem)
+
+    }, [currentItem])
 
 
     function showCreate(){
@@ -249,7 +335,7 @@ function Panel({item}){
                 </motion.div>
             
         }
-        </AnimatePresence> : currentItem === 'folder' ? <FolderForm /> : null
+        </AnimatePresence> : currentItem === 'folder' ? <FolderForm /> : <ProductCard product={currentItem} />
         }
     
     </div>
@@ -271,26 +357,21 @@ function FolderForm(){
     </motion.div>
 }
 
-function Input({value, setValue, placeholder, label, Icon, type}){
-
-    const [focus, setFocus] = useState(false)
-
-    function handleFocus(ev){
-        setFocus(true)
-    }
-
-    function clearFocus(){
-        setFocus(false)
-    }
-
-    return <div>
-        <h3>{label}</h3>
-        <div style={{border: focus ? 'solid 1px rgba(150,150,150, .9)' : ''}} className="bg-neutral-100 overflow-hidden rounded-md h-10">
-            <input placeholder={placeholder} onBlur={clearFocus} onFocus={handleFocus} className="shadow-inner px-2 border-1 bg-transparent h-full w-full outline-none" type={type} />
-        </div>
-    </div>
-}
-
 function ReferenceForm(){
 
+}
+
+function ProductCard({product}){
+    return <div className="bg-white h-full w-full flex p-5">
+            <div className="w-[50%]">
+                <Input label={'Nom du produit'} value={product.name} />
+                <Input label={'Réference'} value={product.ref} />
+            </div>
+            <div className="w-[50%] flex flex-col items-center">
+                <div className="h-[300px] w-[300px] rounded-lg overflow-hidden drop-shadow-md bg-black select-none">
+                    <img src={product.image} className="" />
+                </div>
+            </div>
+
+    </div>
 }
