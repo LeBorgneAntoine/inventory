@@ -1,6 +1,6 @@
 {
-  "short_name": "Inventaire",
-  "name": "Inventaire",
+  "short_name": "InvManager",
+  "name": "InvManager",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,10 +18,8 @@
       "sizes": "512x512"
     }
   ],
+  "theme_color" : "dark:black white",
   "start_url": ".",
-  "gcm_user_visible_only": true,
-  "display": "standalone",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "orientation": "portrait"
+  "display": "standalone"
+  
 }

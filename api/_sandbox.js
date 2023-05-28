@@ -1,3 +1,4 @@
+/*
 const Axios = require("axios");
 const cheerio = require("cheerio");
 const Reference = require("./model/model.Reference");
@@ -19,7 +20,7 @@ async function run(){
         readReference(refUrl)
         await sleep(.2)
     }
-*/
+
 }
 
 let browser;
@@ -59,10 +60,7 @@ const MAX_DEPTH = 2;
 let visitedPath = []
 
 
-/**
- * 
- * @param {String} url 
- */
+
 async function nav(url, depth){
 
     await sleep(.3)
@@ -118,11 +116,7 @@ async function nav(url, depth){
 
 }
 
-/**
- * 
- * @param {String} url
- * @returns {Reference} 
- */
+
 async function readReference(url){
 
     if(url && url.length > 3){
@@ -145,3 +139,22 @@ function sleep(sec){
 
 
 run()
+
+*/
+
+const { getCategoryByID } = require("./DAO/DAO.Category");
+const { addCompany } = require("./DAO/DAO.Company");
+const { getAllFieldsOfCategoryIDRecursive } = require("./DAO/DAO.Field");
+const { getDatabaseHelperInstance } = require("./database/database");
+const { mail } = require("./utils/utils.mail");
+
+
+getDatabaseHelperInstance().openDatabase('./database/database.db');
+
+async function main(){
+
+    console.log(await getCategoryByID(6))
+
+}
+
+main()

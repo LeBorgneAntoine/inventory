@@ -21,10 +21,12 @@ export default function QrCodeReader(){
 
         const html5QrcodeScanner = new Html5QrcodeScanner('qrScanner', {
             fps: 60,
-            qrbox: 250,
             disableFlip: false,
         }, true);
-        html5QrcodeScanner.render(alert, alert);
+
+        html5QrcodeScanner.render(alert, () => {
+
+        });
 
     }
 

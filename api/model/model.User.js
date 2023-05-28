@@ -1,86 +1,69 @@
-const { Socket } = require("socket.io");
 
-let _devices = []
 
-function getAllConnectedDevices(){
-    return _devices;
-}
-
-function getDevice(name){
-    return _devices.find((device) => device.getName() === name)
-}
-
-/**
- * 
- * @param {Device} device 
- */
-function connectDevice(device){
-
-    let existingDevice = _devices.find((device) => device.getName() === device.getName())
-
-    if(existingDevice){
-        existingDevice.setSocket(device.getSocket())
-    }else{
-        _devices.push(device);
-    }
-
-}
-
-/**
- * 
- * @param {Socket} socket 
- */
-function disconectDevice(socket){
-    let index = _devices.findIndex((val) => val.getSocket().id === socket.id)
-    if(index >= 0 && _devices[index]){
-        console.log('Device',_devices[index].getName(),'disconnected.')
-    }
-    _devices.splice(index)
-}
-
-class Device{
+class User{
 
     _data;
 
-    /**
-     * 
-     * @param {{socket: Socket}} param0 
-     */
     constructor({
+        id,
+        username,
+        password,
         name,
-        socket
+        email
     }){
         this._data = {
+            username,
+            password,
             name,
-            socket
+            email,
+            id,
         }
     }
 
-    setSocket(socket){
-        this._data.socket = socket;
+    /**
+     * 
+     * @returns {number}
+     */
+    getID(){
+        return this._data.id
     }
 
     /**
-     * 
-     * @returns {Socket}
+     * @returns {String}
      */
-    getSocket(){
-        return this._data.socket
+    getUsername(){
+        return this._data.username
     }
 
+    /**
+     * @returns {String}
+     */
+    getPassword(){
+        return this._data.password
+    }
+
+    /**
+     * @returns {String}
+     */
     getName(){
         return this._data.name
     }
 
-    sendData(data){
-        this._data.socket.send(data)
+    /**
+     * @returns {String}
+     */
+    getEmail(){
+        return this._data.email
+    }
+
+
+    /**
+     * @returns {Array}
+     */
+    toArray(params){
+        return Object.keys(this._data).filter((val) => !params || !params.includes('-'+val) ).map((val) => this._data[val])
     }
 
 }
 
-module.exports = {
-    getAllConnectedDevices,
-    connectDevice,
-    disconectDevice,
-    Device
-}
+module.exports = User

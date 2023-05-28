@@ -2,23 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  @variants responsive {
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
+:root{
 
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-    }
-  }
+  --h-nav : 50px;
+  --w-nav : 65px;
+
+  --green : rgb(87, 141, 82);
+  --red : rgb(185, 76, 76);
+  --primary: rgb(0,106,255);
 }
+
+@layer utilities {
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+      display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-visible::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar {
+    width: 5px;
+    height: 0px;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: transparent;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background: rgb(58, 58, 58);
+    border-radius: 50px;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background: #575757;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 0;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(199, 199, 199);
+    border-radius: 50px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #c0a0b9;
+  }
+
+  .bg-red-primary{
+    background-color: rgb(185, 76, 76);
+  }
+
+  .bg-green-primary{
+    background-color: rgb(87, 141, 82);
+  }
+
+  .bg-primary{
+    background-color: rgb(0,106,255);
+  }
+
+  .text-primary{
+    color: rgb(0,106,255);
+  }
+
+  .text-green-primary{
+    color: rgb(87, 141, 82);
+
+  }
+
+  .text-red-primary{
+    color: rgb(185, 76, 76);
+  }
+
+  .border-primary{
+    border: solid 1px rgb(0,106,255);
+  }
+
+  .border-red-primary{
+    border-color: rgb(185, 76, 76);
+  } 
+
+}
+
+
+
+
 
 body {
   overflow: overlay;
+  zoom: reset;
 }
 
 *{
@@ -32,7 +123,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(63 63 70 / var(--tw-bg-opacity));
 }
 
 code {

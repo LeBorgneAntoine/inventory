@@ -4,13 +4,21 @@ import loadingAnimation from '../assets/lotties/loading.json'
 import {AnimatePresence, motion, useAnimate} from 'framer-motion'
 import useMeasure from "react-use-measure";
 
-export default function Button({children, Icon, color, process, onClick, width, transparent, className}){
+export default function Button({children, Icon, color, process, onClick, width, transparent, className, refAction}){
 
     const [isLoading, setLoading] = useState(false);
     const [scope, animate] = useAnimate()
-    const [ref, bounds] = useMeasure()
     const canBeClick = useRef(true)
 
+    useEffect(() => {
+        
+        if(refAction){
+            refAction({
+                click: () => hasClicked()
+            })
+        }
+
+    },[refAction])
 
     const [buttonData, setButtonData] = useState({
         Icon: Icon,
@@ -20,21 +28,19 @@ export default function Button({children, Icon, color, process, onClick, width, 
 
     function buttonSize(){
 
-        return width ? width : buttonData.text.length * 13
-
     }
-
+/*
     useEffect(() => {
 
         if(!isLoading){
             animate(scope.current, {
-                width: buttonSize(),
+                width: bounds.width,
             }, {
                 type: 'spring'
             })
         }else{
             animate(scope.current, {
-                width: 60,
+                width: bounds.height,
             }, {
                 type: 'spring'
             })
@@ -42,6 +48,8 @@ export default function Button({children, Icon, color, process, onClick, width, 
 
     }, [isLoading])
     
+*/
+
     function hasClicked(){
 
         if(!isLoading && canBeClick.current){
@@ -53,6 +61,8 @@ export default function Button({children, Icon, color, process, onClick, width, 
                 setLoading(true)
 
                 process((newData) => {
+                    
+                    let _listener;
 
                     animate('div', {
                         opacity: [0, 1],
@@ -91,16 +101,25 @@ export default function Button({children, Icon, color, process, onClick, width, 
                             opacity: 1,
                             y: [-10, 0]
                         })
+
                         canBeClick.current = true;
                     }
 
                     setTimeout(() => {
+
+                        if(_listener)_listener()
 
                        resetData()
                        
                     }, 1000)
 
                     setLoading(false)
+
+                    return{
+                        onAnimationEnd : (listener) => {
+                            _listener = listener;
+                        }
+                    } 
                 })
             }else if(onClick){
                 onClick()
@@ -111,25 +130,31 @@ export default function Button({children, Icon, color, process, onClick, width, 
     }
 
     return <div className={className}>
-                <motion.div whileTap={{scale: .9}} key={buttonData} ref={scope} onTap={hasClicked} style={{width: buttonSize()}} className='overflow-hidden h-[50px] outline-none rounded-md duration-100 md:hover:opacity-80 bg-blue-500 flex items-center justify-center gap-4 text-white cursor-pointer select-none'>
+                <div className={'flex w-full justify-center items-center '+className}>
 
-                <AnimatePresence onExitComplete>
-                { isLoading ?
-       
-                    <div>
-                        <Lottie className="w-[40px] h-[40px]" style={{
-                            filter: 'brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(102%) contrast(102%)',
-                        }} animationData={loadingAnimation} />
-                    </div>
-                    :
-                    <div className="flex justify-center items-center gap-3">
-                        {buttonData.Icon && <buttonData.Icon className='w-6 h-6' />}
-                        {buttonData.text && <h3 ref={ref} className="text-[16px] whitespace-nowrap">{buttonData.text}</h3>}
-                    </div>
-                }
+                    <motion.div whileTap={{scale: .9}} key={buttonData} ref={scope} onTap={hasClicked} className='overflow-hidden w-full h-[60px] md:h-[50px] outline-none rounded-lg duration-100 xl:hover:opacity-50 bg-primary flex items-center justify-center gap-4 text-white cursor-pointer select-none'>
 
-                </AnimatePresence>
-        
-        </motion.div>
+                        <AnimatePresence onExitComplete>
+
+                        { isLoading ?
+
+                            <div>
+                                <Lottie className="w-[40px] h-[40px]" style={{
+                                    filter: 'brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(102%) contrast(102%)',
+                                }} animationData={loadingAnimation} />
+                            </div>
+                            :
+                            <div className="flex justify-center items-center gap-3">
+                                {buttonData.Icon && <buttonData.Icon className='w-6 h-6' />}
+                                {buttonData.text && <h3 className="text-[16px] whitespace-nowrap">{buttonData.text}</h3>}
+                            </div>
+
+                        }
+
+                        </AnimatePresence>
+
+                    </motion.div>
+
+                </div>
     </div>
 }
