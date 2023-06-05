@@ -25,6 +25,22 @@ async function getAllFieldsOfCategoryID(id){
 }
 
 
+async function getAllFieldOf(forObject, linkID){
+
+    return new Promise((resolve) => {
+
+        getDatabaseHelperInstance().query().all('SELECT * FROM Field WHERE forObject = ? AND linkID = ?', [forObject, linkID], (err, rows) => {
+
+            if(err)throw err;
+            resolve(rows)
+
+        })
+
+    })
+
+}
+
+
 async function getAllLegacyFieldsOfCategoryID(id){
     let fields = []
 
@@ -41,7 +57,7 @@ async function getAllLegacyFieldsOfCategoryID(id){
  */
 async function getAllFieldsOfCategoryIDRecursive(id, array){
 
-    let fields = await getAllFieldsOfCategoryID(id)
+    let fields = await getAllFieldOf('CATEGORY',id)
 
     array.push(...fields)
 
@@ -54,6 +70,7 @@ async function getAllFieldsOfCategoryIDRecursive(id, array){
 }
 
 
+
 /**
  * 
  * @param {Field} field 
@@ -62,10 +79,29 @@ function addField(field){
 
     return new Promise((resolve) => {
 
-        getDatabaseHelperInstance().query().all('INSERT INTO Field (categoryID, type, value, name) VALUES (?,?,?,?)', field.toArray('-id'), (err, rows) => {
+        getDatabaseHelperInstance().query().run('INSERT INTO Field (categoryID, type, value, name) VALUES (?,?,?,?)', field.toArray('-id'), (err, rows) => {
 
             if(err)throw err;
-            resolve(rows.map((rows) => new Field(rows)))
+            resolve()
+
+        })
+
+    })
+
+}
+
+/** 
+ * 
+ * @param {Field} field 
+ */
+function addFieldFor(field){
+
+    return new Promise((resolve) => {
+
+        getDatabaseHelperInstance().query().run('INSERT INTO Field (forObject, linkID, type, value, name) VALUES (?,?,?,?,?)', field.toArray('-id'), (err, rows) => {
+
+            if(err)throw err;
+            resolve()
 
         })
 
@@ -78,6 +114,7 @@ module.exports = {
     getAllFieldsOfCategoryID,
     addField,
     getAllFieldsOfCategoryIDRecursive,
-    getAllLegacyFieldsOfCategoryID
-
+    getAllLegacyFieldsOfCategoryID,
+    getAllFieldOf,
+    addFieldFor
 }

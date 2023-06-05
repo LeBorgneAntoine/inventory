@@ -1,5 +1,5 @@
 const { addCategory, getAllCategoriesByCompany, getAllCategoriesByCompanyID, getAllCategoriesByCompanyIDAndParentID } = require('../DAO/DAO.Category');
-const { addField } = require('../DAO/DAO.Field');
+const { addField, addFieldFor } = require('../DAO/DAO.Field');
 const { getAllProductsByCompanyIDAndCategoryID } = require('../DAO/DAO.Product');
 const Category = require('../model/model.Category');
 const Field = require('../model/model.Field');
@@ -14,8 +14,6 @@ router.post('/', async (req, res) => {
 
         let { name, fields, parent, company } = requireBody(req, ['name', 'company'])
 
-        console.log(parent)
-
         let category = await addCategory(new Category({
             name,
             parentID: parent,
@@ -24,9 +22,10 @@ router.post('/', async (req, res) => {
     
         if(fields)for(let field of fields){
     
-            await addField(new Field({
-                categoryID: category.getID(),
-                name: field.value
+            await addFieldFor(new Field({
+                forObject: 'CATEGORY',
+                linkID: category.getID(),
+                name: field.value,
             }))
     
         }
@@ -52,8 +51,6 @@ router.get('/', async (req, res) => {
         for(let category of categories){
 
             let products = await getAllProductsByCompanyIDAndCategoryID(company.id, category.id)
-
-            
 
             category.productsQuantity = products.length
 

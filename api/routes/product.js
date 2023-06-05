@@ -1,3 +1,4 @@
+const { isCompanyContainUser } = require('../DAO/DAO.Category');
 const { getAllFieldsOfCategory, getAllFieldsOfCategoryID, getAllLegacyFieldsOfCategoryID } = require('../DAO/DAO.Field');
 const { updateProduct } = require('../DAO/DAO.Product');
 const { addProduct, getAllProductsByCompanyIDAndCategoryID } = require('../DAO/DAO.Product');
@@ -8,7 +9,28 @@ const router = require('express').Router();
 
 
 
+router.get('/all', async (req, res) => {
+    try{
+
+        let { company, category } = requireParam(req, ['company'])
+
+        if(!await isCompanyContainUser(company, req.user))throw new Error('Unauthorize company access')
+
+        let products = await getAllProductsByCompanyIDAndCategoryID(company.id, category?.id ?? null)
+        
+        res.send(products)
+
+    }catch(err){ 
+        console.log(err)
+        res.sendStatus(500)
+    }
+    
+
+})
+
+
 router.get('/', async (req, res) => {
+
     try{
 
         let { company, category } = requireParam(req, ['company'])
@@ -21,9 +43,8 @@ router.get('/', async (req, res) => {
         console.log(err)
         res.sendStatus(500)
     }
-    
-
 })
+
 
 
 router.post('/', async (req, res) => {
