@@ -35,6 +35,7 @@ export default function useAuth(){
     return {
         isAuth : !!_auth,
         auth,
-        disconnect
+        disconnect,
+        user: _auth
     }
 }

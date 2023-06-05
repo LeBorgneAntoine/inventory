@@ -140,8 +140,6 @@ function sleep(sec){
 
 run()
 
-*/
-
 const { getCategoryByID } = require("./DAO/DAO.Category");
 const { addCompany } = require("./DAO/DAO.Company");
 const { getAllFieldsOfCategoryIDRecursive } = require("./DAO/DAO.Field");
@@ -158,3 +156,5 @@ async function main(){
 }
 
 main()
+
+*/

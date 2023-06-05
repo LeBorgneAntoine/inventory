@@ -6,14 +6,16 @@ class Field{
 
     constructor({
         id,
-        categoryID,
+        forObject,
+        linkID,
         type,
         value,
         name
     }){
 
         this._data = {
-            categoryID,
+            forObject,
+            linkID,
             type,
             value,
             name,
@@ -36,6 +38,14 @@ class Field{
      */
     getID(){
         return this._data.id
+    }
+
+    getLinkID(){
+        return this._data.linkID
+    }
+
+    getForObject(){
+        return this._data.forObject
     }
 
     /**

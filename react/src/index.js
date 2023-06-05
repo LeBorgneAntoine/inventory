@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Application from './Application';
-
+import './i18n';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
 
 root.render( 
   <React.StrictMode>
-    <div className='h-full w-full dark:bg-neutral-900 absolute'>
-      
+    <Suspense fallback={<span>Loading...</span>}>
+      <div className='h-full w-full duration-150 bg-white dark:bg-neutral-950 absolute overflow-hidden'>
+        
         <Application />
       
-    </div>
+      </div>
+    </Suspense>
+    
    
   </React.StrictMode>
 );

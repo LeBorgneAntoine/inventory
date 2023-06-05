@@ -6,11 +6,17 @@ class Client{
 
     constructor({
         id,
-        name,
+        fullname,
+        email,
+        phone,
+        fullname,
 
     }){
         this._data = {
-            name,
+            fullname,
+            email,
+            phone,
+            fullname,
             id,
         } 
     }
@@ -19,8 +25,16 @@ class Client{
         return this._data.id
     }
 
-    getName(){
-        return this._data.name
+    getFullName(){
+        return this._data.fullname
+    }
+
+    getEmail(){
+        return this._data.email
+    }
+
+    getPhone(){
+        return this._data.phone
     }
 
     toArray(params){

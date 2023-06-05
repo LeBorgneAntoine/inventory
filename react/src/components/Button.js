@@ -132,7 +132,7 @@ export default function Button({children, Icon, color, process, onClick, width, 
     return <div className={className}>
                 <div className={'flex w-full justify-center items-center '+className}>
 
-                    <motion.div whileTap={{scale: .9}} key={buttonData} ref={scope} onTap={hasClicked} className='overflow-hidden w-full h-[60px] md:h-[50px] outline-none rounded-lg duration-100 xl:hover:opacity-50 bg-primary flex items-center justify-center gap-4 text-white cursor-pointer select-none'>
+                    <motion.div whileTap={{scale: .9}} key={buttonData} ref={scope} onTap={hasClicked} className='overflow-hidden w-full h-[60px] md:h-[40px] outline-none rounded-lg duration-100 xl:hover:opacity-50 bg-primary flex items-center justify-center gap-4 text-white cursor-pointer select-none'>
 
                         <AnimatePresence onExitComplete>
 

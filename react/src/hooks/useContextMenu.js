@@ -7,6 +7,17 @@ export default function useContextMenu(defaultItems){
     const items = useRef(defaultItems ?? [])
     const ref = useRef();
 
+    function invokeContextMenu(x, y, items){
+
+        _setContextMenu({
+            position: { 
+                x,
+                y
+            },
+            items: items
+        })
+
+    }
 
     function onInvoke(ev){
 
@@ -42,6 +53,6 @@ export default function useContextMenu(defaultItems){
     }
 
 
-    return [ref, setItems]
+    return [ref, setItems, invokeContextMenu]
 }
 

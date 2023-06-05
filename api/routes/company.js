@@ -1,11 +1,13 @@
-const { addCompany  } = require('../DAO/DAO.Company');
+const { addCompany, getCompanyByID  } = require('../DAO/DAO.Company');
 const { addEmployee, getAllCompanyByUser } = require('../DAO/DAO.Employee');
 const Company = require('../model/model.Company');
 const { requireBody } = require('../utils/utils.request');
 const fs = require('fs');
 const { decodeBase64Image } = require('../utils/utils.string');
 const { File } = require('buffer');
-const multer  = require('multer')
+const multer  = require('multer');
+const { isCompanyContainUser } = require('../DAO/DAO.security.util');
+
 const upload = multer({ dest: 'uploads/' })
 
 const router = require('express').Router();
@@ -40,9 +42,26 @@ router.post('/', async (req ,res) => {
 
 })
 
+router.get('/info', async (req, res) => {
+    try{
+
+        let { company } = requireBody(req, ['company'])
+
+        if(!await isCompanyContainUser(company, req.user.getID()))throw new Error('Unauthorize company access')
+        
+        let companyObj = await getCompanyByID(company)
+
+        res.send(companyObj._data)
+
+    }catch(err){
+        console.log(err)
+        res.sendStatus(500)
+    }   
+})
 
 
-router.post('/logo',upload.single('logo'), async (req ,res) => {
+
+router.post('/logo', upload.single('logo'), async (req ,res) => {
 
     try{
 
@@ -52,7 +71,6 @@ router.post('/logo',upload.single('logo'), async (req ,res) => {
 
         //console.log(req.files)
         //fs.writeFileSync('test', picture)
-
 
         res.sendStatus(200)
 

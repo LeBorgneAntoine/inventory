@@ -13,12 +13,11 @@ export default function CheckBox({onCheck, defaultValue, className}) {
 
     function handleToggle(){
         setState(!state)
-        animate(ref.current, {scale: [1, 1.1, 1]})
     }
 
-    return <div className={'h-[25px] w-[25px] '+className}>
+    return <div className={'h-[20px] w-[20px] '+className ?? ''}>
         
-        <motion.div ref={ref} onClick={handleToggle} style={{backgroundColor: state ? '#00cc66' : null}} className={" w-full h-full flex justify-center items-center dark:bg-neutral-800 bg-neutral-200 rounded-md "}>
+        <motion.div ref={ref} onClick={handleToggle} className={` w-full h-full flex ${state ? 'bg-primary' : 'border-[1px] dark:border-neutral-600 border-neutral-300'} justify-center items-center   rounded-md `}>
             {state && <Icon.CheckIcon className="h-[15px] w-[15px] text-white" />}
         </motion.div>
     </div>

@@ -7,10 +7,7 @@ import CanvasEvent from "../utils/canvas/CanvasEvent";
 
 export default function Developement(){
 
-    const { contextMenu } = useContextMenu()
-    const { ref, canvas } = useCanvas()
-
-    
+    /*
     useEffect(() => {
         if(canvas){
                
@@ -61,8 +58,13 @@ export default function Developement(){
 
         }
     }, [canvas])
+*/
 
+    useEffect(() => {
+
+
+    }, [])
     return <div>
-        <canvas tabIndex='1' ref={ref} />
+        
     </div>
 }

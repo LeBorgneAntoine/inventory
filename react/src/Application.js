@@ -1,9 +1,10 @@
+import { useTranslation } from "react-i18next"
 import Dashboard from "./pages/Dashboard"
 
 const { useState, useEffect } = require("react")
 const { getAuthContext, getCompanyContext, getContextMenuContext } = require("./context")
-const { NavigationBar, PrivateRoute, ContextMenu } = require("./components")
-const { Routes, Route, BrowserRouter } = require("react-router-dom")
+const { NavigationBar, PrivateRoute, ContextMenu, PageContainer } = require("./components")
+const { Routes, Route, BrowserRouter, useLocation } = require("react-router-dom")
 const { Inventory, Settings, Developement, Login, Register, CategoryForm, ProductForm, Design, DesignForm, Clients, Transaction } = require("./pages")
 const {motion, AnimatePresence} = require('framer-motion')
 
@@ -12,15 +13,20 @@ export default function Application(){
     const [authContext, setAuthContext] = useState(null)
     const [companyContext, setCompanyContext] = useState(null)
     const [contextMenuContext, setContextMenuContext] = useState(null)
-  
+    const {t, i18n} = useTranslation()
+
     const AuthContext = getAuthContext()
     const CompanyContext = getCompanyContext()
     const ContextMenuContext = getContextMenuContext()
 
     useEffect(() => {
+
       let user = localStorage.getItem('user');
       let company = localStorage.getItem('current-company');
-
+      let lang = localStorage.getItem('lang');
+      let theme = localStorage.getItem('theme');
+      if(theme && theme === 'dark') document.body.classList.add('dark')
+      if(lang) i18n.changeLanguage(lang)
       if(user) setAuthContext(JSON.parse(user))
       if(company)setCompanyContext(JSON.parse(company))
 
@@ -28,7 +34,7 @@ export default function Application(){
 
     return ( 
     
-      <BrowserRouter  >
+      <BrowserRouter >
   
         <AuthContext.Provider value={{_auth: authContext, _setAuth: setAuthContext}} >
           <CompanyContext.Provider value={{_company: companyContext, _setCompany: setCompanyContext}}>
@@ -36,7 +42,7 @@ export default function Application(){
 
               { authContext ? <NavigationBar /> : null }
     
-              <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="w-[calc(100%-var(--w-nav)-.5rem)] h-full max-md:w-full max-md:h-[calc(100%-var(--h-nav)-.5rem)] absolute max-md:left-0 max-md:top-[calc(var(--h-nav)+.5rem)] left-[calc(var(--w-nav)+.5rem)]">
+              <PageContainer>
 
                 <Routes >
 
@@ -54,10 +60,12 @@ export default function Application(){
                   <Route path='/new-category' element={ <PrivateRoute fallbackPath={'/login'} condition={!!authContext} Component={CategoryForm} /> } />
                   <Route path='/new-product' element={ <PrivateRoute fallbackPath={'/login'} condition={!!authContext} Component={ProductForm} /> } />
                   <Route path='/design/new' element={ <PrivateRoute fallbackPath={'/login'} condition={!!authContext} Component={Design} /> } />
-                  
-                </Routes >
 
-              </motion.div>
+                </Routes >
+                
+              </PageContainer>
+
+              
 
               <AnimatePresence>
                 { contextMenuContext ? <ContextMenu contextMenu={contextMenuContext} setContextMenu={setContextMenuContext} /> : null }

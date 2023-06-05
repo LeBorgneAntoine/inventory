@@ -19,6 +19,20 @@ function getCompanyByName(name){
 
 /**
  * 
+ * @param {Number} id 
+ * @returns {Promise<Company>}
+ */
+function getCompanyByID(id){
+    return new Promise((resolve) => {
+        getDatabaseHelperInstance().query().get('SELECT * FROM Company WHERE id = ?', [id], (err, row) => {
+            if(err)throw err;
+            resolve(new Company(row))
+        })
+    })
+}
+
+/**
+ * 
  * @param {Company} company 
  * @returns {Promise<Company>}
  */
@@ -78,6 +92,7 @@ module.exports = {
     getCompanyByName,
     addCompany,
     deleteCompany,
-    updateCompany
+    updateCompany,
+    getCompanyByID
 
 }

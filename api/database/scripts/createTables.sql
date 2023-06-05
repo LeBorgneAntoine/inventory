@@ -10,14 +10,16 @@ CREATE TABLE IF NOT EXISTS Product (
     name TEXT,
     image TEXT
 );
-CREATE TABLE IF NOT EXISTS ProductField (
+CREATE TABLE IF NOT EXISTS CompletedField (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     fieldID NUMBER,
+    linkID NUMBER,
     value TEXT
 );
 CREATE TABLE IF NOT EXISTS Field (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    categoryID NUMBER,
+    forObject TEXT,
+    linkID NUMBER,
     type TEXT,
     value TEXT,
     name TEXT

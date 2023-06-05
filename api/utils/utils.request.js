@@ -79,8 +79,31 @@ async function secure(req, res, next){
 
 }
 
+
+async function checkIsMyCompany(req, res, next){
+
+    let  bodyCompany  = req.body.company;
+    let  queryCompany  = req.query.company;
+    let user = req.user
+
+    try{
+
+        if(!bodyCompany || !queryCompany)throw new Error('need company id')
+
+        
+
+
+
+    }catch(err){
+        console.log(err)
+        res.sendStatus(401)
+    }
+
+}
+
 module.exports = {
     requireBody,
     requireParam,
-    secure
+    secure,
+    checkIsMyCompany
 }

@@ -1,10 +1,11 @@
 import { useContext, useEffect } from "react";
 import { getCompanyContext } from "../context";
+import useServer from "./useServer";
 
 export default function useCompany(){
 
     const { _company, _setCompany } = useContext(getCompanyContext())
-
+    const { get } = useServer()
     useEffect(() => {
 
         if(_company){
@@ -14,8 +15,8 @@ export default function useCompany(){
     }, [_company])
 
     return {
-        currentCompany : _company,
-        switchCompany: _setCompany
+        info : _company,
+        switchCompany: _setCompany,
     }
 
 }

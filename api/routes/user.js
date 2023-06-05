@@ -1,7 +1,3 @@
-const { getCompanyByName, addCompany } = require('../DAO/DAO.Company');
-const { getUserByCompanyIDAndUsername, addUser, getUserByEmail, getUserByUsername } = require('../DAO/DAO.User');
-const { trans, setLang } = require('../dictionaries/dict');
-const Company = require('../model/model.Company');
 const User = require('../model/model.User');
 const { compareHash, hashPassword } = require('../utils/utils.password');
 const jwt = require('jsonwebtoken');
@@ -10,10 +6,6 @@ const router = require('express').Router();
 const validator = require('validator').default;
 
 router.post('/login', async (req, res) => {
-
-    language = req.headers['accept-language']
-
-    setLang(language)
 
     try{
 
@@ -25,16 +17,14 @@ router.post('/login', async (req, res) => {
 
         let token = jwt.sign({ userID : user.getID() }, process.env.JWT_SECRET, {algorithm: 'HS256'})
 
-        console.log(token)
-
         res.send({
             name: user.getName(),
-            token
+            token,
         })
 
     }catch(err){
         console.log(err)
-        res.status(401).send(trans('LOGIN_FAIL'));
+        res.status(401).send('LOGIN_FAIL');
 
     }
 

@@ -1,6 +1,8 @@
 const { getDatabaseHelperInstance } = require("../database/database");
 const Category = require("../model/model.Category");
 const Company = require("../model/model.Company");
+const { getCompanyByID } = require("./DAO.Company");
+const { getAllUsersByCompany } = require("./DAO.Employee");
 
 /**
  * 
@@ -35,6 +37,8 @@ function getAllCategoriesByCompanyIDAndParentID(companyID, parentID){
     })
 
 }
+
+
 
 /**
  * 

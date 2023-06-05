@@ -6,8 +6,18 @@ const User = require("../model/model.User");
 /**
  * 
  * @param {Company} company 
+ * @returns {Promise<Array<User>>}
  */
-function getEmployeeByCompany(company){
+function getAllUsersByCompany(company){
+
+    return new Promise((resolve) => {
+
+        getDatabaseHelperInstance().query()
+            .all('SELECT * FROM Employee, User WHERE userID = id AND companyID = ?', [company.getID], (err, rows) => {
+                if(err)throw err
+                resolve(rows.map((row) => new User(row)))
+        })
+    })
 
 }
 
@@ -52,5 +62,6 @@ function getAllCompanyByUser(user){
 
 module.exports = {
     addEmployee,
-    getAllCompanyByUser
+    getAllCompanyByUser,
+    getAllUsersByCompany
 }

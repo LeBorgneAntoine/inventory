@@ -10,6 +10,8 @@ import QrCodeReader from "./QrCodeReader"
 import Table from "./Table"
 import HorizontalScroll from "./HorizontalScroll"
 import ContextMenu from "./ContextMenu"
+import PageContainer from "./PageContainer"
+import Switch from "./Switch"
 
 export {
     BottomSheet,
@@ -23,5 +25,7 @@ export {
     QrCodeReader,
     Table,
     HorizontalScroll,
-    ContextMenu
+    ContextMenu,
+    PageContainer,
+    Switch
 }
