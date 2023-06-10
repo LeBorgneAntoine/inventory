@@ -9,7 +9,7 @@ const User = require("../model/model.User");
  * @returns {Promise<Array<User>>}
  */
 function getAllUsersByCompany(company){
-
+    if(!company)throw new Error('No company')
     return new Promise((resolve) => {
 
         getDatabaseHelperInstance().query()

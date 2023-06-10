@@ -4,6 +4,7 @@ import {motion} from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import useCanvas from '../hooks/useCanvas';
 import { Rectangle, Table, Text } from '../utils/canvas/canvasUtils';
+import React from 'react'
 
 
 

@@ -4,16 +4,15 @@ import useServer from "./useServer"
 
 export default function useAuth(){
 
-    const { _auth, _setAuth } = useContext(getAuthContext())
+    const { _auth, _setAuth } = useContext(getAuthContext()) //storage
     const { post } = useServer()
 
     async function auth(username, password){
 
         try{
 
-            let user = (await post('/user/login', { username, password }))
+            let user = await post('/user/login', { username, password })
 
-            localStorage.setItem('user',JSON.stringify(user))
             _setAuth(user)
 
         }catch(err){
@@ -27,7 +26,6 @@ export default function useAuth(){
 
     async function disconnect(){
 
-        localStorage.removeItem('user');
         _setAuth(null);
 
     }

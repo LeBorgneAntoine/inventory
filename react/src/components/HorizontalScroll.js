@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import Icon from '@heroicons/react/24/outline'
 import { useEffect, useRef, useState } from "react";
 import useSize from "../hooks/useSize";
+import React from 'react'
+
 export default function HorizontalScroll({children}){
 
     const { width } = useSize()

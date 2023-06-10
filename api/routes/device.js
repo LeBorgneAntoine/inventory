@@ -33,9 +33,7 @@ router.post('/rename', (req, res) => {
     }else{
         res.status(401).send('3 charactère ou plus')
     }
-
-
-
+    
 })  
 
 

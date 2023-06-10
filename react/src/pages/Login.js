@@ -1,16 +1,17 @@
 import { Button, Input } from "../components";
 import Icon from '@heroicons/react/24/solid'
-import {  ReactComponent as GoogleIcon } from "../assets/icons/google.svg";
+import { default as GoogleIcon } from 'assets/icons/google.svg'
 import useServer from "../hooks/useServer";
-import { useEffect, useRef, useState } from "react";
-import { ReactComponent as BackgroundPattern } from '../assets/svg/wwwhirl.svg'
-import { ReactComponent as Logo } from '../assets/svg/logo.svg'
+import  React,{ useEffect, useRef, useState } from "react";
+import { default as BackgroundPattern } from 'assets/svg/wwwhirl.svg'
+import { default as Logo } from 'assets/svg/logo.svg'
 import { motion } from 'framer-motion'
 import useAuth from "../hooks/useAuth";
 import validator from "validator";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-export default function Login(){
+function Login(){
 
     const { post } = useServer()
 
@@ -21,11 +22,12 @@ export default function Login(){
     const loginButton = useRef(null)
     const { auth } = useAuth()
     const [company, setCompany] = useState(null)
+    const { t } = useTranslation()
     
     const [errorMessage, setErrorMessage] = useState(null)
 
     useEffect(() => {
-
+        
         let [companyName, username] = usernameOrEmail.split('\\');
 
         if(username){
@@ -66,7 +68,7 @@ export default function Login(){
                 color: '#ec4e4e'
             })
 
-            setErrorMessage(err.response.data)
+            setErrorMessage(t(err.response.data))
         }
 
     }
@@ -94,7 +96,7 @@ export default function Login(){
 
                 <Logo className='w-20 h-20 mb-4' />
 
-                <h1 className="text-[25px] font-black text-center dark:text-white">Connectez vous à {company ? company : 'Inventory'}</h1>
+                <h1 className="text-[25px] font-black text-center dark:text-white">{t('LOGIN_TO')} {company ? company : t('APP_NAME')}</h1>
 
                 <Input error={errorMessage} focus={(isFocus) => setErrorMessage(null)} value={usernameOrEmail} setValue={setUsernameOrEmail} label={'Nom d\'utilisateur ou mail'} className={"w-[calc(100%-20px)]"} placeholder={'example@mail.com'} Icon={Icon.UserIcon} />
                 <Input error={errorMessage} focus={(isFocus) => setErrorMessage(null)} value={password} setValue={setPassword} label={'Mot de passe'} className={"w-[calc(100%-20px)]"} placeholder={'********'} type={'password'} Icon={Icon.LockClosedIcon} />
@@ -104,10 +106,10 @@ export default function Login(){
                     <h3>{errorMessage}</h3>
                 </div>  : null}
 
-                <a href="#" className=" w-[calc(100%-30px)] text-right opacity-30 dark:text-neutral-300">Mot de passe oublié</a>
+                <a href="#" className=" w-[calc(100%-30px)] text-right opacity-30 dark:text-neutral-300">{t('FORGOT_PASSWORD')}</a>
 
                 <div className="w-full flex flex-col items-center justify-end mt-3 z-2">
-                    <Button refAction={(ref) => { loginButton.current = ref }} process={handleLogin} className={'w-[calc(100%-20px)]'} Icon={Icon.ArrowRightOnRectangleIcon}>Se connecter</Button>
+                    <Button  refAction={(ref) => { loginButton.current = ref }} process={handleLogin} className={'w-[calc(100%-20px)]'} Icon={Icon.ArrowRightOnRectangleIcon}>{t('LOGIN')}</Button>
                 </div>
 
                 <input type='submit' className='hidden' />
@@ -127,7 +129,7 @@ export default function Login(){
             </div>
 
             <div className="absolute bottom-2 flex gap-1 items-center mt-3">
-                <h3 className="dark:text-neutral-500">Auccun compte ?</h3>
+                <h3 className="dark:text-neutral-500">{t('NO_ACCOUNT')}</h3>
                 <a className="text-blue-500 md:hover:text-blue-400 duration-200" href="/register">Créer un compte</a>
             </div>
 
@@ -139,3 +141,4 @@ export default function Login(){
 
 }
 
+export default Login;

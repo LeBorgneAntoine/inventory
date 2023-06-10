@@ -8,6 +8,7 @@ import {motion} from 'framer-motion';
 import useAuth from "../hooks/useAuth";
 import { useTranslation } from "react-i18next";
 import { Switch } from "../components";
+import React from 'react'
 
 const LANGUAGES = [{name: 'Français', value: 'fr'},{name: 'English', value: 'en'}]
 
@@ -75,8 +76,10 @@ export default function Settings(){
         localStorage.setItem('theme', theme)
 
         if(theme == 'light'){
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', 'white');
             document.body.classList.remove('dark')
         }else if(theme == 'dark'){
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#171717');
             document.body.classList.add('dark')
         }
 

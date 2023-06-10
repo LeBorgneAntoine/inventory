@@ -3,16 +3,13 @@ import IconFull from '@heroicons/react/24/solid'
 import { AnimatePresence, motion, useAnimate } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useNavigation } from 'react-router-dom';
-import { generateDeviceName } from '../utils/strUtils';
-import Lottie, { useLottie } from 'lottie-react'
-import menuAnimation from '../assets/lotties/menu.json'
-import useServer from '../hooks/useServer';
 import { useMediaQuery } from 'react-responsive';
 import useAuth from '../hooks/useAuth';
-import { ReactComponent as Logo } from '../assets/svg/logo.svg'
+import Logo from 'assets/svg/logo.svg'
 import useCompany from '../hooks/useCompany';
 import Input from './Input';
 import { useTranslation } from 'react-i18next';
+
 
 const MENU_ITEMS = [
     {Icon: Icon.Squares2X2Icon, IconFull: IconFull.Squares2X2Icon , name: 'DASHBOARD', path: '/'},
@@ -27,7 +24,6 @@ const MENU_ITEMS = [
 export default function NavigationBar(){
 
     const [isMenuOpen, setMenuOpen] = useState(false);
-    const [serverConnected, setServerConnected] = useState(false);
     const navigate = useNavigate()
     let isMobile = useMediaQuery({ query: '(max-width: 768px)' })
     const { info } = useCompany()
@@ -35,28 +31,35 @@ export default function NavigationBar(){
     const { t } = useTranslation()
     
     const location = useLocation()
-
-    const { connect } = useServer()
-
-    useEffect(() => {
-
-        if(!localStorage.getItem('device_name'))localStorage.setItem('device_name', generateDeviceName())
-        
-        connect({ name: localStorage.getItem('device_name') })
-       
-    }, [])
+    
+    function isElectron() {
+        // Renderer process
+        if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+            return true;
+        }
+    
+        // Main process
+        if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
+            return true;
+        }
+    
+        // Detect the user agent when the `nodeIntegration` option is set to true
+        if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
+            return true;
+        }
+    
+        return false;
+    }
 
     function toggle(){
         setMenuOpen(!isMenuOpen)    
     }
 
-
-
     return <>
 
-        <div className='w-full dark:text-neutral-300 px-2 justify-between drop-shadow-md h-[var(--h-nav)] bg-white dark:bg-neutral-900 border-b-[1px] flex items-center border-neutral-200 dark:border-neutral-700/50'>
+        <div className='w-full dark:text-neutral-300 drag-window px-2 justify-between h-[var(--h-nav)] bg-white dark:bg-neutral-900 border-b-[1px] flex items-center border-neutral-200 dark:border-neutral-700/50'>
                 
-            <div className='flex gap-4 px-2 items-center'>   
+            <div className='no-drag-window flex gap-4 px-2 items-center'>   
                 {!isMobile ?<>
                     <Logo className='w-[30px] h-[30px]' />
                     <h1 className='text-[20px]'>InvManager</h1>
@@ -67,12 +70,12 @@ export default function NavigationBar(){
                 </>}
             </div> 
 
-            {!isMobile ? <Input placeholder={t('SEARCH')+'...'} Icon={Icon.MagnifyingGlassIcon} className={'w-[30%] max-w-[500px]'} /> : null}
+            {!isMobile ? <Input placeholder={t('SEARCH')+'...'} Icon={Icon.MagnifyingGlassIcon} className={'no-drag-window w-[30%] max-w-[500px]'} /> : null}
 
-            <div className='flex items-center gap-4 px-2'>
+            <div className={`flex no-drag-window items-center gap-4 px-2 ${ isElectron ? 'mr-[130px]' : ''}`}>
                 <div>
-                    <h1 className='text-[16px]'>{info.name}</h1>
-                    <h5 className='opacity-40 text-[14px text-right w-full'>{user.name}</h5>
+                    <h1 className='text-[16px]'>{info?.name}</h1>
+                    <h5 className='opacity-40 text-[14px text-right w-full'>{user?.name}</h5>
                 </div>
                 <Icon.ComputerDesktopIcon className='w-[30px] h-[30px]'/>
             </div>
@@ -86,7 +89,10 @@ export default function NavigationBar(){
             {MENU_ITEMS.filter((item) => item.condition?.() ?? true).map((item, index) => <MenuItem index={index} IconFull={item.IconFull} key={index} Icon={item.Icon} path={item.path} >{t(item.name)}</MenuItem>)}
 
         </Menu>
-
+        
+        <AnimatePresence>
+            { isMenuOpen ? <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className='bg-black/70 absolute w-full h-full z-10' /> : null}
+        </AnimatePresence>
     </>
 }
 
@@ -101,13 +107,15 @@ function Menu({children, isOpen, setOpen}){
        if(isMobile)setOpen(false)
     }
 
-    function toggle(){
-        setOpen(!isOpen)
-    }
+
+
 
     useEffect(() => {
 
         if(scope.current){
+
+            
+
             animate(scope.current, {
                 width: isOpen ? 250 : isMobile ? 0 : 65,
                 opacity: isMobile ? isOpen ? 1 : 0 : 1
@@ -120,7 +128,7 @@ function Menu({children, isOpen, setOpen}){
     return <>
 
 
-        {(!isMobile || isOpen) ? <motion.div  onHoverStart={() => !isMobile && setOpen(true)} onHoverEnd={() => !isMobile && setOpen(false)} ref={scope}  className={`h-[calc(100%-var(--h-nav))] drop-shadow-xl border-r-[1px] border-neutral-200 dark:border-neutral-700/50 pt-2 w-[var(--w-nav)] top-[var(--h-nav)] max-md:w-[70%] left-0 overflow-hidden  z-50 dark:text-neutral-300 text-gray-900 dark:bg-neutral-900 bg-white absolute px-2 select-none flex flex-col gap-0`}>
+        {(!isMobile || isOpen) ? <motion.div  onHoverStart={() => !isMobile && setOpen(true)} onHoverEnd={() => !isMobile && setOpen(false)} ref={scope}  className={`h-[calc(100%-var(--h-nav))] border-r-[1px] border-neutral-200 dark:border-neutral-700/50 pt-2 w-[var(--w-nav)] top-[var(--h-nav)] max-md:w-[70%] left-0 overflow-hidden  z-50 dark:text-neutral-300 text-gray-900 dark:bg-neutral-900 bg-white absolute px-2 select-none flex flex-col gap-0`}>
 
             {React.Children.map(children, (child) => {
 
@@ -140,7 +148,7 @@ function Menu({children, isOpen, setOpen}){
 function MenuItem({onClick, path, Icon, IconFull, index, children, isOpen}){
 
     const navigate = useNavigate()
-
+    const location = useLocation()
 
     function handleClick(){
         navigate(path, { replace: true })
@@ -148,7 +156,7 @@ function MenuItem({onClick, path, Icon, IconFull, index, children, isOpen}){
     }
 
     function getPath(){ 
-        return '/'+window.location.href.split('/').at(-1)
+        return '/'+location.pathname.split('/').at(1)
     }
 
     return <motion.div onClick={handleClick} whileHover={{ transitionDuration: 200 }} exit={{x: -50, opacity: 0}} animate={{x: 0, opacity: 1}} initial={{x: -50, opacity: 0}} transition={{delay: index * .05, type: 'keyframes', ease: 'easeIn'}} className={`relative h-[50px] cursor-pointer overflow-hidden px-3 flex items-center gap-4  ${(getPath() === path) ? 'bg-blue-600/10 text-primary' : 'hover:bg-neutral-100/50 dark:hover:bg-neutral-700/10 dark:text-neutral-200'}  rounded-md  text-neutral-950`} >

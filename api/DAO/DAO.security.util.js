@@ -1,3 +1,4 @@
+
 const { getCompanyByID } = require("./DAO.Company");
 const { getAllUsersByCompany } = require("./DAO.Employee");
 
@@ -9,9 +10,12 @@ const { getAllUsersByCompany } = require("./DAO.Employee");
  */
 function isCompanyContainUser(companyID, userID){
 
+
     return new Promise(async (resolve, reject) => {
 
-        let users = await getAllUsersByCompany(await getCompanyByID(companyID))
+        let companyObj = await getCompanyByID(companyID)
+
+        let users = await getAllUsersByCompany(companyObj)
 
         if(users.find((user) => user.getID() === userID)){
             resolve(true)

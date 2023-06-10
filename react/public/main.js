@@ -12,7 +12,10 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1000, height: 800,
-    autoHideMenuBar: true,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      height: 60
+    },
     webPreferences: {
       nodeIntegrationInWorker: true
     }

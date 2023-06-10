@@ -20,15 +20,16 @@ database.setup().script('./database/scripts/createTables.sql')
 
 
 //------[ START - setup requests middlewares ]-------
+app.use(upload());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json());
-app.use(upload());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+
 //------[ END - setup requests middlewares ]-------
 
 
@@ -58,17 +59,11 @@ io.sockets.on('connection', (socket) => {
 
     let { name, token }= socket.handshake.query;
 
-    console.log('Device connected:',name)
-
-    connectDevice(new Device({name, socket}))
-
-    console.log(getAllConnectedDevices().length,'devices connected.')
+    
+   
 
     socket.on('disconnect', () => {
 
-        console.log(getAllConnectedDevices().length,'devices connected.')
-
-        disconectDevice(socket)
     
     });
 

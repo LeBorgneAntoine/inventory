@@ -2,6 +2,7 @@ import { AnimatePresence, useAnimate, useMotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import {motion} from 'framer-motion'
 import useMeasure from "react-use-measure"
+import React from 'react'
 
 export default function BottomSheet({children, onClose, startHeight, stateControl, clip, onBgTap, isShow}){
 

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import useServer from "../hooks/useServer";
 import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 import useCompany from "../hooks/useCompany";
+import React from 'react'
 
 export default function CategoryForm(){
 

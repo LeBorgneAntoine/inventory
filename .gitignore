@@ -11,6 +11,7 @@ files/
 
 # production
 build/
+images/
 .env
 
 # misc

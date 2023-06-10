@@ -1,12 +1,13 @@
 const { addCompany, getCompanyByID  } = require('../DAO/DAO.Company');
 const { addEmployee, getAllCompanyByUser } = require('../DAO/DAO.Employee');
 const Company = require('../model/model.Company');
-const { requireBody } = require('../utils/utils.request');
+const { requireBody, requireParam } = require('../utils/utils.request');
 const fs = require('fs');
 const { decodeBase64Image } = require('../utils/utils.string');
 const { File } = require('buffer');
 const multer  = require('multer');
 const { isCompanyContainUser } = require('../DAO/DAO.security.util');
+const { saveImageFile } = require('../utils/utils.storage');
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -19,12 +20,11 @@ router.post('/', async (req ,res) => {
 
     try{
 
-        let { name, logo, description } = requireBody(req, ['name'])
+        let { name, logo } = requireBody(req, ['name'])
         
         let company = new Company({
             name,
-            logo,
-            description
+            logoURL
         })
 
         let insertedCompany = await addCompany(company)
@@ -60,19 +60,14 @@ router.get('/info', async (req, res) => {
 })
 
 
-
-router.post('/logo', upload.single('logo'), async (req ,res) => {
+router.post('/logo', async (req ,res) => {
 
     try{
 
-        //if    (!picture)throw new Error('Missing picture')
+        if(!req.files?.image)throw new Error('No image')
 
-        console.log(req.file)
-
-        //console.log(req.files)
-        //fs.writeFileSync('test', picture)
-
-        res.sendStatus(200)
+        let fileName = await saveImageFile(req.files.image)
+        res.send(fileName)
 
     }catch(err){
         console.log(err)
@@ -80,6 +75,31 @@ router.post('/logo', upload.single('logo'), async (req ,res) => {
     }
 
 })
+
+
+router.get('/logo', async (req ,res) => {
+
+    try{
+        let { company } = requireParam(req, ['company'])
+
+        let user = req.user;
+
+        if(!isCompanyContainUser(company, user.getID()))return res.sendStatus(401)
+    
+        let companyObj = await getCompanyByID(company)
+
+        let imageFile = require('path').join(__dirname, '../../')+'api\\images\\'+companyObj.getLogoURL()
+
+        res.sendFile(imageFile)
+
+    }catch(err){
+
+    }
+
+   
+
+})
+
 
 /**
  * Get all the company of a user

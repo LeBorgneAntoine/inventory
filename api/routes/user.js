@@ -2,6 +2,8 @@ const User = require('../model/model.User');
 const { compareHash, hashPassword } = require('../utils/utils.password');
 const jwt = require('jsonwebtoken');
 const { requireBody } = require('../utils/utils.request');
+const { getUserByEmail, addUser } = require('../DAO/DAO.User');
+const { getUserByUsername } = require('../DAO/DAO.User');
 const router = require('express').Router();
 const validator = require('validator').default;
 
@@ -13,7 +15,7 @@ router.post('/login', async (req, res) => {
 
         let user = validator.isEmail(username) ? await getUserByEmail(username) : await getUserByUsername(username);
 
-        if(!compareHash(password, user.getPassword()))throw new Error()
+        if(!await compareHash(password, user.getPassword()))throw new Error('Wrong password')
 
         let token = jwt.sign({ userID : user.getID() }, process.env.JWT_SECRET, {algorithm: 'HS256'})
 
@@ -48,7 +50,7 @@ router.post('/register', async (req, res) => {
         res.sendStatus(200);
 
     }catch(err){
-
+        console.log(err)
         res.status(400).send(err)
 
     }

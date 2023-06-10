@@ -4,23 +4,44 @@ import { motion } from 'framer-motion';
 import { Button, HorizontalScroll, Input } from "../components"
 import Icon from '@heroicons/react/24/outline'
 import useServer from "../hooks/useServer"
+import React from 'react'
 
 export default function ProductForm(){
     
     const location = useLocation()
     const navigate = useNavigate()
-    const { get, post } = useServer()
+    const { get, post, postImage } = useServer()
     const imagePicker = useRef();
+    const dropZone = useRef();
 
     const [name, setName] = useState('')
     const [fields, setFields] = useState([])
     const [image, setImage] = useState(null)
+    const imageCanvas = useRef()
 
     function onImageSelected(ev){
 
         let img = ev.target.files[0];
+        setImage(img)
         if(img){
-            setImage(URL.createObjectURL(img))
+
+            let canvas = imageCanvas.current
+
+            let context = canvas.getContext('2d');
+
+            let image = new Image();
+            image.src = URL.createObjectURL(img);
+            image.onload = () => {
+
+                let withRatio = canvas.width / image.width //fit by width
+                let heightRadio = canvas.height / image.height //fit by height
+
+                let ratio = ( withRatio < heightRadio ? withRatio : heightRadio )
+
+                context.clearRect(0, 0, canvas.width, canvas.height)
+                context.drawImage(image, (canvas.width / 2) - ((image.width * ratio) / 2) , (canvas.height / 2) - ((image.height * ratio) / 2), image.width * ratio ,  image.height * ratio);
+            }
+   
         }
 
     }
@@ -43,6 +64,10 @@ export default function ProductForm(){
 
     useEffect(() => {
 
+        imageCanvas.current.addEventListener('drop', (ev) => {
+            console.log(ev)
+        })
+
         fetchFields()
 
     }, [])
@@ -51,10 +76,15 @@ export default function ProductForm(){
     async function handleSubmit(finish){
 
         try{
+            
+            let imageName = await postImage('/product/image', { image })
+            
+            console.log(imageName)
 
             await post('/product', {
                 name,
-                category : location.state?.category ?? null
+                category : location.state?.category ?? null,
+                image: imageName
             })
 
             finish({
@@ -66,6 +96,8 @@ export default function ProductForm(){
             })  
 
         }catch(err){
+
+            console.log(err)
 
             finish({
                 text: 'Erreur !',
@@ -88,13 +120,7 @@ export default function ProductForm(){
             <div className="h-[1px] w-full bg-neutral-500/50 my-5" />
             <div className="flex">
                 <div onClick={handlePickImage} className="w-[150px] h-[150px] dark:bg-neutral-600 bg-neutral-100 rounded-lg flex items-center relative justify-center md:hover:opacity-50 cursor-pointer overflow-hidden">
-                        {
-                            image ? <img  src={image} /> : <>
-                                <Icon.PhotoIcon className="w-[60px] h-[60px] text-neutral-500" />
-                                <Icon.PlusIcon className="text-neutral-500 w-[30px] h-[30px] absolute bottom-1 right-1" />
-                            </>
-                        }
-                            
+                    <canvas ref={imageCanvas} width={200} height={200}/>    
                 </div> 
 
                 <div className="px-3">
@@ -102,12 +128,9 @@ export default function ProductForm(){
                     <h1>Selectioner une image</h1>
                     <h1 className="opacity-50">Format recommender: .png .jpg </h1>
 
-
-
                 </div>
             </div>
             
-
             <div className="h-[1px] w-full bg-neutral-500/50 my-5" />
 
             <input onChange={onImageSelected} ref={imagePicker} type="file" className="hidden" />

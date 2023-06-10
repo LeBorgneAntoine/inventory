@@ -19,6 +19,24 @@ function getAllProducts(callback){
 
 /**
  * 
+ * @param {Number} id 
+ * @returns  {Promise<Product>}
+ */
+function getProductByID(id){
+    return new Promise((resolve, reject) => {
+        getDatabaseHelperInstance().query().get('SELECT * FROM Product WHERE id = ?',[id], (err, row) => {
+            if (err) throw err;
+            if(row){
+                resolve(new Product(row))
+            }else{
+                reject()
+            }
+        })
+    })
+}
+
+/**
+ * 
  * @param {Number} id
  * @returns {Promise<Array>>}
  */
@@ -108,5 +126,6 @@ module.exports = {
     deleteProduct,
     updateProduct,
     deleteProductByID,
-    deleteAllProducts
+    deleteAllProducts,
+    getProductByID
 }

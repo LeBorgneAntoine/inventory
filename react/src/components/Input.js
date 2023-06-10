@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import React,{ useEffect, useRef, useState } from "react"
 import { motion } from 'framer-motion';
 import IconFull from '@heroicons/react/24/solid'
 
@@ -27,8 +27,8 @@ export default function Input({value, setValue, placeholder, error, focus, label
     return <div className={className}>
         <div className="relative">
             {label ? <h3 className="ml-2 mb-2 text-neutral-700 dark:text-neutral-500 select-none">{label}</h3> : null}
-            <div style={{border: isFocus ? 'solid 1px var(--primary)' : (error ? 'solid 1px rgba(225,87,87, .9)' : '')}} className="bg-neutral-50  dark:placeholder-neutral-800 dark:bg-neutral-800/70 border-[1px] dark:text-neutral-100 dark:border-neutral-700 duration-100 relative flex items-center overflow-hidden rounded-lg h-[60px] md:h-[50px]">
-                <input placeholder={placeholder} onBlur={clearFocus} onChange={handleChange} value={value} onFocus={handleFocus} className="px-4 text-[18px] border-1 bg-transparent h-full w-[calc(100%-30px)] outline-none" type={type} />
+            <div style={{border: isFocus ? 'solid 1px var(--primary)' : (error ? 'solid 1px rgba(225,87,87, .9)' : '')}} className="bg-neutral-50  dark:placeholder-neutral-800 dark:bg-neutral-800/70 border-[1px] dark:text-neutral-100 dark:border-neutral-700 duration-100 relative flex items-center overflow-hidden rounded-lg h-[60px] md:h-[45px]">
+                <input placeholder={placeholder} onBlur={clearFocus} onChange={handleChange} value={value} onFocus={handleFocus} className="px-4 text-[15px] border-1 bg-transparent h-full w-[calc(100%-30px)] outline-none" type={type} />
                 {Icon && <Icon style={{ color: isFocus ? 'rgb(59 130 246 / var(--tw-bg-opacity))' : (error ? 'rgba(225,87,87, .9)' : '#c8c8c8') }} className='absolute pointer-events-none right-2 w-[20px] h-[20px]' />}
             </div>
             {strength ? <StrengthChecker value={localValue} rules={strength}  /> : null}

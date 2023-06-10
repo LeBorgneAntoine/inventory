@@ -15,7 +15,8 @@ import Table from "../components/Table";
 import useServer from "../hooks/useServer";
 import useContextMenu from "../hooks/useContextMenu";
 import { useTranslation } from "react-i18next";
-
+import {Buffer} from 'buffer';
+import React from 'react'
 
 export default function Inventory(){
 
@@ -81,12 +82,22 @@ export default function Inventory(){
 
     async function fetchCategories(){
         setCategories(null);
-        setCategories(await get('/category', { parent : location.state?.category ?? null }))
+
+        try{
+            setCategories(await get('/category', { parent : location.state?.category ?? null }))
+        }catch(err){
+
+        }
+
     }
 
     async function fetchProducts(){
         setProducts(null);
-        setProducts(await get('/product', { category : location.state?.category ?? null}))
+        try{
+            setProducts(await get('/product', { category : location.state?.category ?? null}))
+        }catch(err){
+
+        }
     }
    
 
@@ -100,7 +111,7 @@ export default function Inventory(){
                             <h3 className="text-lg ">{t('CATERGORIES')}</h3>
                         </div>
                         <div className="flex gap-2 items-center">
-                            <div onClick={() => navigate('/new-category', {
+                            <div onClick={() => navigate('/inventory/new-category', {
                                 state: {
                                     category: location.state?.category
                                 } 
@@ -150,7 +161,7 @@ export default function Inventory(){
 
                         <div className="flex gap-2 items-center">
                             
-                            <div onClick={() => navigate('/new-product', { state: {
+                            <div onClick={() => navigate('/inventory/new-product', { state: {
                                 category: location.state?.category
                             } })} className="h-[40px] px-3 rounded-md bg-neutral-200/50 dark:bg-neutral-800/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-700/50 flex gap-3 justify-center items-center text-neutral-700 dark:text-neutral-400 select-none cursor-pointer">
                                 <Icon.DocumentPlusIcon className="w-[20px] h-[20px]" />
@@ -216,10 +227,36 @@ function ProductCard({product, selection, setSelection}){
 
     const [ref, menu] = useContextMenu()
     const { t } = useTranslation()
+    const [image, setImage] = useState(null)
+    const { get, getImage } = useServer()
+
+    useEffect(() => {
+
+        async function fetchImage(){
+
+            try{
+
+                let imageData = await getImage(`/product/image/${product.id}`)
+
+                let base64ImageString = Buffer.from(imageData.data , 'binary').toString('base64')
+                
+                setImage(base64ImageString)
+                
+            }catch(err){
+
+            }
+
+           
+        }
+
+        fetchImage()
+
+
+    }, [])
 
 
     function handleClick(){
-        
+
         if(selectionMode()){
 
             toggleSelet()
@@ -298,16 +335,13 @@ function ProductCard({product, selection, setSelection}){
 
             <motion.div style={{ scale : selectionMode() ? .8 : 1, y: selectionMode() ? 30 : 0 }} className="flex relative flex-col duration-100 dark:hover:border-neutral-500 drop-shadow-2xl hover:border-neutral-300 overflow-hidden cursor-pointer flex-1 dark:bg-neutral-800/70 rounded-md">
                 
-                <div className="relative dark:bg-neutral-200 overflow-hidden pointer-events-none select-none">
-                    <img src="https://tse4.mm.bing.net/th/id/OIP.0vbYJwEDJukAKztyy7I3rQHaHa?pid=ImgDet&rs=1" className="relative object-cover" />
+                <div className="relative flex justify-center items-center h-[300px] dark:bg-neutral-700 overflow-hidden pointer-events-none select-none">
+                    {image ? <img loading="lazy" src={`data:image/png;base64,${image}`} className="relative w-full h-full object-cover" /> : <Icon.PhotoIcon className="w-[50px] dark:text-neutral-500 h-[50px]" />}
                 </div>
             
-                <div className="relative flex flex-col p-2 justify-center gap-1 text-sm whitespace-nowrap">
+                <div className="absolute bottom-0 left-0 w-full flex flex-col p-2 backdrop-blur-md bg-white/80 dark:bg-neutral-900/80 justify-center gap-1 text-sm whitespace-nowrap">
                     <h1 className="dark:text-neutral-100 font-semibold" >{product.name}</h1>
-                    <div className="flex gap-2 whitespace-nowrap items-center text-neutral-500 dark:text-neutral-400/70">
-                        <Icon.Square3Stack3DIcon className=" w-[20px] h-[20px]" />
-                        <h1>{t('QUANTITY')} {product.quantity}</h1>
-                    </div>
+                   
                 </div>
                 
             </motion.div>

@@ -31,5 +31,14 @@
     "NO_PRODUCT" : "No product",
     "PRODUCT" : "product",
     "ONE_OR_MORE" : "(s)",
-    "PRINTER" : "Printer"
+    "PRINTER" : "Printer",
+    "LOGIN_FAIL" : "Wrong username or password",
+    "USERNAME_OR_EMAIL" : "Username or email",
+    "PASSWORD" : "Password",
+    "LOGIN" : "Login",
+    "FORGOT_PASSWORD" : "Forgot password",
+    "NO_ACCOUNT" : "No account ?",
+    "LOGIN_TO" : "Login to",
+    "APP_NAME" : "MyInventory"
+
 }   

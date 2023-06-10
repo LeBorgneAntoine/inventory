@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import Icon from '@heroicons/react/24/solid';
 import { AnimatePresence, useAnimate, motion } from "framer-motion";
+import React from 'react'
 
 
 export default function FolderSheet({filesList, foldersList, className, onSelect, searchValue}){

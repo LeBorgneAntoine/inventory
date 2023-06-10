@@ -1,9 +1,10 @@
-import { ReactComponent as BackgroundPattern } from '../assets/svg/wwwhirl.svg'
-import { ReactComponent as Logo } from '../assets/svg/logo.svg'
+import BackgroundPattern from 'assets/svg/wwwhirl.svg';
+import Logo from 'assets/svg/logo.svg';
 import { Button, Input } from '../components'
 import Icon from '@heroicons/react/24/solid'
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import React from 'react'
 
 export default function Register(){
 

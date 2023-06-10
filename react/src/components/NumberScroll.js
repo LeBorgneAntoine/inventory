@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import {motion} from 'framer-motion'
 import Icon from '@heroicons/react/24/solid'
 import useMeasure from "react-use-measure"
+import React from 'react'
+
 export default function NumberScroll({defaultValue, className, onChange}){
 
     const [currentNumber, setCurrentNumber] = useState(defaultValue ? defaultValue : 0)

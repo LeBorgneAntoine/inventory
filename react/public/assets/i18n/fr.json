@@ -30,6 +30,13 @@
     "ADD_PRODUCT" : "Ajouter un produit",
     "NO_PRODUCT" : "Aucun produit",
     "PRODUCT" : "produit",
-    "PRINTER" : "Impression"
-
+    "PRINTER" : "Impression",
+    "LOGIN_FAIL" : "Nom d'utilisateur ou mot de passe incorrect",
+    "USERNAME_OR_EMAIL" : "Nom d'utilisateur ou email",
+    "PASSWORD" : "Mot de passe",
+    "LOGIN" : "Se connecter",
+    "FORGOT_PASSWORD" : "Mot de passe oublié",
+    "NO_ACCOUNT" : "Aucun compte ?",
+    "LOGIN_TO" : "Se connecter à",
+    "APP_NAME" : "MyInventory"
 }

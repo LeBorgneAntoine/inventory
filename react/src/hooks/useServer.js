@@ -34,13 +34,39 @@ export default function useServer(){
         return new Promise((resolve) => {
             setTimeout(async () => {
 
-                resolve((await Axios.get(SERVER_ADDRESS + uri, { params: setParams(params), headers: setHeaders() })).data)
+                resolve((await Axios.get(SERVER_ADDRESS + uri, { params: setParams(params), headers:  setHeaders() })).data)
 
             }, 0)
         })
 
 
     }
+
+    async function getImage(uri, params){
+
+        return new Promise((resolve, reject) => {
+            setTimeout(async () => {
+
+                try{
+                    resolve((await Axios.get(SERVER_ADDRESS + uri,{responseType: 'arraybuffer', params: setParams(params), headers:{
+                        responseType: "blob",
+                        ...setHeaders()
+                    }})))
+                }catch(err){
+                    reject('No image')
+                }
+
+                resolve((await Axios.get(SERVER_ADDRESS + uri,{responseType: 'arraybuffer', params: setParams(params), headers:{
+                    responseType: "blob",
+                    ...setHeaders()
+                }})))
+
+            }, 0)
+        })
+
+
+    }
+    
 
     async function put(uri, body, headers){
 
@@ -49,12 +75,27 @@ export default function useServer(){
             return (await Axios.put(SERVER_ADDRESS + uri, setParams(body), { headers : setHeaders(headers) })).data
 
         }catch(err) {
-            throw err
+            return null
         }
 
     }
 
+    async function postImage(uri, params, headers){
 
+        try{
+
+            return (await Axios.post(SERVER_ADDRESS + uri, { responseType: "arraybuffer", ...setParams(params) }, { 
+                headers : {
+                    "Content-Type": "multipart/form-data",
+                    ...setHeaders(headers)
+                }
+            })).data
+
+        }catch(err) {
+            return null
+        }
+
+    }
 
     async function post(uri, params, headers){
 
@@ -86,13 +127,27 @@ export default function useServer(){
 
     }
 
+    async function checkTokenValidity(token){
+
+        try{
+
+            return await get('/user/token', { token })
+
+        }catch(err) {
+            throw err
+        }
+
+    }
 
     return {
         get,
         post,
+        postImage,
+        getImage,
         connect,
         on,
-        put
+        put,
+        checkTokenValidity
     }
 
 }

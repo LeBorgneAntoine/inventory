@@ -9,7 +9,9 @@ import Design from "./Design"
 import DesignForm from "./DesignForm"
 import Clients from "./Clients"
 import Transaction from "./Transaction"
-
+import ClientSettings from "./ClientSettings"
+import Product from "./Product"
+import CompanyForm from "./CompanyForm"
 export {
     Developement,
     Inventory,
@@ -22,4 +24,7 @@ export {
     DesignForm,
     Clients,
     Transaction,
+    ClientSettings,
+    Product,
+    CompanyForm
 }

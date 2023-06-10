@@ -27,7 +27,7 @@ function getCompanyByID(id){
         getDatabaseHelperInstance().query().get('SELECT * FROM Company WHERE id = ?', [id], (err, row) => {
             if(err)throw err;
             resolve(new Company(row))
-        })
+        })  
     })
 }
 
@@ -46,23 +46,6 @@ function addCompany(company){
                 resolve(company)
             })
     })
-}
-
-/**
- * 
- * @param {Number} id 
- * @returns {Promise<Company>}
- */
-function getCompanyByID(id){
-
-    new Promise((resolve) => {
-        getDatabaseHelperInstance().query().get('SELECT * FROM Company WHERE id = ?', [id], (err, row) => {
-            if(err)throw err;
-            let company = new Company(row)
-            resolve(company)
-        })
-    })
-
 }
 
 /**

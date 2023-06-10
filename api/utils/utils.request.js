@@ -73,7 +73,7 @@ async function secure(req, res, next){
 
     }catch(err){
         //show error on console for dev
-        console.err(err)
+        console.log(err)
         res.sendStatus(401);
     }
 
